@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,7 +20,8 @@ export default function FullHistory() {
     'Transport',
     'Take Out',
     'Hotels',
-    'Health'
+    'Health',
+    'More'
   ];
 
   const activities: ActivityItem[] = [
@@ -50,9 +51,8 @@ export default function FullHistory() {
       id: '4',
       name: 'Payment Received-Bay...',
       date: '09-Mar 2023, 3:10PM',
-      amount: 'S$15.00',
+      amount: '',
       image: require('../assets/images/restaurantIcon.jpeg'),
-      hasServiceReorder: true,
     },
     {
       id: '5',
@@ -87,7 +87,7 @@ export default function FullHistory() {
   ];
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.container}>
       <Stack.Screen 
         options={{ 
           headerShown: false
@@ -95,78 +95,182 @@ export default function FullHistory() {
       />
 
       {/* Header with back button */}
-      <View className="pt-12 px-4 pb-4 bg-white">
-        <View className="flex-row items-center">
+      <View style={styles.header}>
+        <View style={styles.headerTop}>
           <TouchableOpacity 
             onPress={() => router.back()}
-            className="mr-4"
+            style={styles.backButton}
           >
             <Ionicons name="chevron-back" size={24} color="#000" />
           </TouchableOpacity>
-          <Text className="text-xl font-medium">Activity</Text>
+          <Text style={styles.headerTitle}>Activity</Text>
         </View>
+
+        {/* Categories */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoriesScroll}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category}
+              onPress={() => setSelectedCategory(category)}
+              style={[
+                styles.categoryButton,
+                selectedCategory === category && styles.categoryButtonActive
+              ]}
+            >
+              <Text style={[
+                styles.categoryText,
+                selectedCategory === category && styles.categoryTextActive
+              ]}>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
-      {/* Categories */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        className="px-4 py-3 bg-white border-b border-gray-100"
-      >
-        {categories.map((category) => (
-          <TouchableOpacity
-            key={category}
-            onPress={() => setSelectedCategory(category)}
-            className={`px-5 py-2.5 rounded-full mr-3 ${
-              selectedCategory === category 
-                ? 'bg-blue-500 shadow-sm' 
-                : 'bg-gray-50 border border-gray-200'
-            }`}
-          >
-            <Text 
-              className={`${
-                selectedCategory === category 
-                  ? 'text-white font-medium' 
-                  : 'text-gray-600'
-              } text-sm`}
-            >
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
       {/* Activity List */}
-      <ScrollView className="flex-1 px-4">
+      <ScrollView style={styles.content}>
         {activities.map((activity) => (
-          <View 
-            key={activity.id}
-            className="flex-row items-center justify-between py-4 border-b border-gray-100"
-          >
-            <View className="flex-row items-center flex-1">
+          <View key={activity.id} style={styles.activityItem}>
+            <View style={styles.activityLeft}>
               <Image 
                 source={activity.image}
-                className="w-12 h-12 rounded-full"
+                style={styles.activityImage}
               />
-              <View className="ml-3 flex-1">
-                <Text className="text-gray-900 font-medium">{activity.name}</Text>
-                <Text className="text-gray-500 text-sm">{activity.date}</Text>
-                <View className="flex-row mt-1">
-                  <TouchableOpacity>
-                    <Text className="text-blue-500 mr-4">Rate</Text>
+              <View style={styles.activityDetails}>
+                <Text style={styles.activityName}>{activity.name}</Text>
+                <Text style={styles.activityDate}>{activity.date}</Text>
+                <View style={styles.activityActions}>
+                  <TouchableOpacity style={styles.actionButtonContainer}>
+                    <Text style={styles.actionButton}>Rate</Text>
+                    <Ionicons name="chevron-forward" size={16} color="#2563eb" />
                   </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text className="text-blue-500">
+                  <TouchableOpacity style={styles.actionButtonContainer}>
+                    <Text style={styles.actionButton}>
                       {activity.hasServiceReorder ? 'Service Reorder' : 'Reorder'}
                     </Text>
+                    <Ionicons name="chevron-forward" size={16} color="#2563eb" />
                   </TouchableOpacity>
                 </View>
               </View>
-              <Text className="text-gray-900 font-medium">{activity.amount}</Text>
             </View>
+            {activity.amount && (
+              <Text style={styles.amount}>{activity.amount}</Text>
+            )}
           </View>
         ))}
       </ScrollView>
     </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#fff',
+    paddingTop: 44,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  backButton: {
+    marginRight: 16,
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#000',
+  },
+  categoriesScroll: {
+    marginTop: 8,
+  },
+  categoriesContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    gap: 8,
+  },
+  categoryButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#F3F4F6',
+    marginRight: 8,
+  },
+  categoryButtonActive: {
+    backgroundColor: '#2563eb',
+  },
+  categoryText: {
+    fontSize: 15,
+    color: '#6B7280',
+    fontWeight: '500',
+  },
+  categoryTextActive: {
+    color: '#fff',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  activityItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 28,
+  },
+  activityLeft: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  activityImage: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    marginRight: 16,
+  },
+  activityDetails: {
+    flex: 1,
+  },
+  activityName: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 4,
+  },
+  activityDate: {
+    fontSize: 15,
+    color: '#6B7280',
+    marginBottom: 8,
+  },
+  activityActions: {
+    flexDirection: 'row',
+    gap: 24,
+  },
+  actionButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  actionButton: {
+    color: '#2563eb',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  amount: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: '#000',
+    marginLeft: 16,
+  },
+}); 

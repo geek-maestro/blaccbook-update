@@ -60,210 +60,381 @@ export default function RestaurantDetails() {
           headerShown: false
         }} 
       />
-      <ScrollView className="flex-1 bg-white">
-        {/* Header Image with Overlay Text */}
-        <View className="relative h-72">
+      <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
+        {/* Header Section with Image */}
+        <View style={{ position: 'relative', height: 320 }}>
           <Image 
             source={require('../../assets/images/fine-dining.png')}
-            className="w-full h-full"
+            style={{ width: '100%', height: '100%' }}
             resizeMode="cover"
           />
-          {/* Dark overlay gradient */}
-          <View className="absolute inset-0 bg-black/30" />
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)' }} />
           
-          {/* Top buttons */}
-          <View className="absolute top-12 left-4 right-4 flex-row justify-between items-center">
-            <TouchableOpacity 
-              onPress={() => router.back()} 
-              className="w-10 h-10 rounded-full bg-white justify-center items-center"
-            >
-              <Ionicons name="chevron-back" size={24} color="#333" />
-            </TouchableOpacity>
-            <TouchableOpacity className="w-10 h-10 rounded-full bg-white justify-center items-center">
-              <Ionicons name="bookmark-outline" size={20} color="#333" />
-            </TouchableOpacity>
-          </View>
+          {/* Back Button */}
+          <TouchableOpacity 
+            onPress={() => router.back()}
+            style={{ 
+              position: 'absolute', 
+              top: 60, 
+              left: 15,
+              width: 40, 
+              height: 40, 
+              backgroundColor: '#fff',
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 10
+            }}
+          >
+            <Ionicons name="chevron-back" size={24} color="#000" />
+          </TouchableOpacity>
 
-          {/* Restaurant name and rating */}
-          <View className="absolute bottom-24 left-4 right-4">
-            <Text className="text-3xl font-bold text-white">Limelight</Text>
-            <Text className="text-3xl font-bold text-white">Restaurant</Text>
-            <View className="flex-row items-center justify-between mt-1">
-              <View className="flex-row items-center gap-1">
+          {/* Restaurant name and rating on image */}
+          <View style={{ 
+            position: 'absolute', 
+            left: 15, 
+            bottom: 120,
+            zIndex: 1
+          }}>
+            <Text style={{ 
+              fontSize: 32, 
+              fontWeight: 'bold', 
+              color: '#fff', 
+              marginBottom: 5 
+            }}>Limelight</Text>
+            <Text style={{ 
+              fontSize: 32, 
+              fontWeight: 'bold', 
+              color: '#fff', 
+              marginBottom: 15 
+            }}>Restaurant</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', marginRight: 5 }}>
                 {renderStars(4)}
-                <Text className="ml-1 text-white">4.0</Text>
               </View>
-              <Text className="text-white underline">See All 1,000</Text>
+              <Text style={{ color: '#fff', marginLeft: 5 }}>4.0</Text>
+              <Text style={{ color: '#fff', marginLeft: 10, textDecorationLine: 'underline' }}>See All 1,000</Text>
             </View>
           </View>
 
-          {/* Restaurant Status Card - Overlapping */}
-          <View className="absolute -bottom-28 left-4 right-4">
-            <View className="bg-white rounded-xl p-4 shadow-lg">
-              <Text className="text-gray-700">$$ • Dine-in /Take out</Text>
-              <Text className="text-red-500">Closes in 40 Mins</Text>
-              <View className="flex-row items-center">
-                <Ionicons name="time-outline" size={14} color="#666" />
-                <Text className="text-gray-500 ml-1">Updated 4 months ago</Text>
-              </View>
-
-              {/* Action Buttons */}
-              <View className="flex-row justify-between mt-4">
-                {actionButtons.map((button) => (
-                  <TouchableOpacity 
-                    key={button.id}
-                    className="items-center"
-                  >
-                    <View className="w-10 h-10 rounded-full bg-gray-100 justify-center items-center mb-1">
-                      <Ionicons name={button.icon} size={20} color="#333" />
-                    </View>
-                    <Text className="text-[10px] text-gray-700">{button.label}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              <Text className="text-xs text-gray-500 mt-4">
-                For orders less than $12.00 for this treats shop a small order fee applies
-              </Text>
+          {/* Hovering Info Card */}
+          <View style={{ 
+            position: 'absolute',
+            left: 15,
+            right: 15,
+            bottom: -70,
+            backgroundColor: '#fff',
+            borderRadius: 15,
+            padding: 15,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 5,
+            zIndex: 2
+          }}>
+            <Text style={{ color: '#666' }}>$$ • Dine-in/Take out</Text>
+            <Text style={{ color: '#f00', marginTop: 5 }}>Closes in 40 Mins</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+              <Ionicons name="time-outline" size={14} color="#666" />
+              <Text style={{ color: '#666', marginLeft: 5 }}>Updated 4 months ago</Text>
             </View>
+
+            {/* Action Buttons */}
+            <View style={{ 
+              flexDirection: 'row', 
+              justifyContent: 'space-between',
+              marginTop: 15,
+            }}>
+              {actionButtons.map((button) => (
+                <TouchableOpacity 
+                  key={button.id}
+                  style={{ alignItems: 'center' }}
+                >
+                  <View style={{ 
+                    width: 40, 
+                    height: 40, 
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 5
+                  }}>
+                    <Ionicons name={button.icon} size={20} color="#333" />
+                  </View>
+                  <Text style={{ fontSize: 12, color: '#666' }}>{button.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text style={{ fontSize: 12, color: '#666', marginTop: 10 }}>
+              For orders less than $12.00 for this treats shop a small order fee applies
+            </Text>
           </View>
         </View>
 
-        {/* Content after the overlapping card */}
-        <View className="mt-24 px-4">
+        {/* Content after the hovering card */}
+        <View style={{ marginTop: 80 }}>
           {/* Restaurant Photos */}
-          <View className="mt-4">
-            <Text className="text-xl font-bold text-gray-800 mb-4">Restaurant Photos</Text>
-            <View className="flex-row flex-wrap justify-between">
-              <View className="w-[48%] h-40 rounded-xl overflow-hidden mb-4">
-                <Image 
-                  source={require('../../assets/images/dish1.jpeg')}
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-              </View>
-              <View className="w-[48%] h-40 rounded-xl overflow-hidden mb-4">
-                <Image 
-                  source={require('../../assets/images/dish2.jpeg')}
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-              </View>
-              <View className="w-full h-40 rounded-xl overflow-hidden">
-                <Image 
-                  source={require('../../assets/images/dish3.jpeg')}
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-              </View>
+          <View style={{ padding: 15 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 15 }}>Restaurant Photos</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+              <Image 
+                source={require('../../assets/images/dish1.jpeg')}
+                style={{ width: '48%', height: 120, borderRadius: 10 }}
+                resizeMode="cover"
+              />
+              <Image 
+                source={require('../../assets/images/dish2.jpeg')}
+                style={{ width: '48%', height: 120, borderRadius: 10 }}
+                resizeMode="cover"
+              />
+              <Image 
+                source={require('../../assets/images/dish3.jpeg')}
+                style={{ width: '100%', height: 120, borderRadius: 10 }}
+                resizeMode="cover"
+              />
             </View>
           </View>
 
-          {/* Recommendation */}
-          <View className="mt-6 bg-white rounded-xl p-4 shadow-sm mb-4">
-            <Text className="text-lg font-semibold text-gray-800 mb-3 text-center">Would you recommend this business?</Text>
-            <View className="flex-row justify-center items-center gap-3 mb-6">
-              <TouchableOpacity className="bg-gray-100 px-6 py-2 rounded-full">
-                <Text className="text-gray-700">Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity className="bg-gray-100 px-6 py-2 rounded-full">
-                <Text className="text-gray-700">No</Text>
-              </TouchableOpacity>
-              <TouchableOpacity className="bg-gray-100 px-6 py-2 rounded-full">
-                <Text className="text-gray-700">Maybe</Text>
-              </TouchableOpacity>
+          {/* Recommendation Section */}
+          <View style={{ 
+            margin: 15,
+            padding: 15,
+            backgroundColor: '#fff',
+            borderRadius: 10,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3
+          }}>
+            <Text style={{ 
+              fontSize: 16,
+              fontWeight: '600',
+              textAlign: 'center',
+              marginBottom: 15
+            }}>
+              Would you recommend this business?
+            </Text>
+            
+            <View style={{ 
+              flexDirection: 'row',
+              justifyContent: 'center',
+              gap: 10,
+              marginBottom: 20
+            }}>
+              {['Yes', 'No', 'Maybe'].map((option) => (
+                <TouchableOpacity
+                  key={option}
+                  style={{
+                    paddingHorizontal: 20,
+                    paddingVertical: 8,
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: 20
+                  }}
+                >
+                  <Text style={{ color: '#666' }}>{option}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
 
-            <View className="flex-row justify-around items-center border-t border-gray-200 pt-4">
+            <View style={{ 
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              borderTopWidth: 1,
+              borderTopColor: '#eee',
+              paddingTop: 15
+            }}>
               {recommendationActions.map((action) => (
-                <TouchableOpacity 
+                <TouchableOpacity
                   key={action.id}
-                  className="items-center"
+                  style={{ alignItems: 'center' }}
                 >
                   <MaterialIcons name={action.icon} size={24} color="#666" />
-                  <Text className="text-xs text-gray-600 mt-1">{action.label}</Text>
+                  <Text style={{ fontSize: 12, color: '#666', marginTop: 5 }}>{action.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
           {/* Map Section */}
-          <View className="bg-white rounded-xl overflow-hidden shadow-sm mb-4">
-            <View className="w-full h-48 bg-gray-200" />
-            <View className="p-4">
-              <View className="flex-row items-center mb-2">
+          <View style={{ 
+            margin: 15,
+            backgroundColor: '#fff',
+            borderRadius: 10,
+            overflow: 'hidden',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3
+          }}>
+            {/* Map Preview */}
+            <View 
+              style={{ 
+                width: '100%', 
+                height: 160, 
+                backgroundColor: '#f3f4f6',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <MaterialIcons name="map" size={40} color="#9ca3af" />
+            </View>
+
+            {/* Drive Time Info */}
+            <View style={{ padding: 15 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
                 <Ionicons name="car-outline" size={20} color="#666" />
-                <Text className="text-gray-700 ml-2">20mins drive</Text>
-                <Text className="text-gray-500 ml-auto">20km</Text>
+                <Text style={{ marginLeft: 10, color: '#666' }}>20mins drive</Text>
+                <Text style={{ marginLeft: 'auto', color: '#666' }}>20km</Text>
               </View>
-              <Text className="text-gray-700 mb-1">855 El Camino Real,</Text>
-              <Text className="text-gray-700 mb-2">ste 130, Palo,CA 94301,USA</Text>
-              <Text className="text-gray-600 mb-3">Street Parking</Text>
-              
-              <TouchableOpacity className="flex-row items-center justify-between py-3 border-t border-gray-200">
-                <Text className="text-blue-600 font-semibold">Get Directions</Text>
+
+              <Text style={{ color: '#333', marginBottom: 5 }}>855 El Camino Real,</Text>
+              <Text style={{ color: '#333', marginBottom: 5 }}>ste 130, Palo,CA 94301,USA</Text>
+              <Text style={{ color: '#666', marginBottom: 15 }}>Street Parking</Text>
+
+              {/* Get Directions Button */}
+              <TouchableOpacity 
+                style={{ 
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingVertical: 15,
+                  borderTopWidth: 1,
+                  borderTopColor: '#eee'
+                }}
+              >
+                <Text style={{ color: '#2563eb', fontWeight: '600' }}>Get Directions</Text>
                 <MaterialIcons name="directions" size={24} color="#2563eb" />
               </TouchableOpacity>
 
-              <TouchableOpacity className="flex-row items-center justify-between py-3 border-t border-gray-200">
+              {/* Call Button */}
+              <TouchableOpacity 
+                style={{ 
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingVertical: 15,
+                  borderTopWidth: 1,
+                  borderTopColor: '#eee'
+                }}
+              >
                 <View>
-                  <Text className="text-blue-600 font-semibold">Call</Text>
-                  <Text className="text-gray-600">+1-650-321-0512</Text>
+                  <Text style={{ color: '#2563eb', fontWeight: '600' }}>Call</Text>
+                  <Text style={{ color: '#666' }}>+1-650-321-0512</Text>
                 </View>
                 <Ionicons name="call-outline" size={24} color="#2563eb" />
               </TouchableOpacity>
 
-              {/* Restaurant Info Section */}
-              <TouchableOpacity className="flex-row items-center justify-between py-3 border-t border-gray-200">
+              {/* Restaurant Info */}
+              <TouchableOpacity 
+                style={{ 
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingVertical: 15,
+                  borderTopWidth: 1,
+                  borderTopColor: '#eee'
+                }}
+              >
                 <View>
-                  <Text className="text-lg font-semibold text-gray-800">Restaurant Info</Text>
-                  <Text className="text-gray-600">Explore our sweets menu</Text>
+                  <Text style={{ fontSize: 16, fontWeight: '600', color: '#333' }}>Restaurant Info</Text>
+                  <Text style={{ color: '#666' }}>Explore our sweets menu</Text>
                 </View>
                 <MaterialIcons name="menu-book" size={24} color="#666" />
               </TouchableOpacity>
 
               {/* Website */}
-              <TouchableOpacity className="flex-row items-center justify-between py-3 border-t border-gray-200">
-                <Text className="text-gray-600">www.icecreampalace.com</Text>
+              <TouchableOpacity 
+                style={{ 
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingVertical: 15,
+                  borderTopWidth: 1,
+                  borderTopColor: '#eee'
+                }}
+              >
+                <Text style={{ color: '#666' }}>www.icecreampalace.com</Text>
                 <MaterialIcons name="arrow-outward" size={24} color="#666" />
               </TouchableOpacity>
 
-              <TouchableOpacity className="flex-row items-center justify-between py-3 border-t border-gray-200">
-                <Text className="text-blue-600 font-semibold">View Page</Text>
+              {/* View Page */}
+              <TouchableOpacity 
+                style={{ 
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingVertical: 15,
+                  borderTopWidth: 1,
+                  borderTopColor: '#eee'
+                }}
+              >
+                <Text style={{ color: '#2563eb', fontWeight: '600' }}>View Page</Text>
                 <MaterialIcons name="chevron-right" size={24} color="#666" />
               </TouchableOpacity>
+            </View>
+          </View>
 
-              {/* Features */}
-              <View className="pt-4 border-t border-gray-200">
-                <Text className="text-lg font-semibold text-gray-800 mb-3">Features</Text>
-                <View className="flex-row flex-wrap gap-2">
-                  <View className="bg-blue-50 px-3 py-1 rounded-full">
-                    <Text className="text-blue-600">Reservation Available</Text>
-                  </View>
-                  <View className="bg-blue-50 px-3 py-1 rounded-full">
-                    <Text className="text-blue-600">Parking Available</Text>
-                  </View>
-                  <View className="bg-blue-50 px-3 py-1 rounded-full">
-                    <Text className="text-blue-600">Free Wifi</Text>
-                  </View>
-                </View>
+          {/* Features Section */}
+          <View style={{ padding: 15 }}>
+            <Text style={{ fontSize: 18, fontWeight: '600', color: '#333', marginBottom: 10 }}>Features</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+              <View style={{ 
+                backgroundColor: '#EBF5FF', 
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 20
+              }}>
+                <Text style={{ color: '#2563eb' }}>Reservation Available</Text>
               </View>
-
-              {/* Action Buttons */}
-              <View className="flex-col gap-4 mt-6">
-                <TouchableOpacity 
-                  onPress={() => router.push('/book-table')}
-                  className="bg-blue-500 py-4 rounded-xl items-center justify-center"
-                >
-                  <Text className="text-white text-[15px]">Book a Table</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  className="bg-white border border-gray-200 py-4 rounded-xl items-center justify-center"
-                >
-                  <Text className="text-blue-500 text-[15px]">Pay Bill</Text>
-                </TouchableOpacity>
+              <View style={{ 
+                backgroundColor: '#EBF5FF', 
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 20
+              }}>
+                <Text style={{ color: '#2563eb' }}>Parking Available</Text>
+              </View>
+              <View style={{ 
+                backgroundColor: '#EBF5FF', 
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 20
+              }}>
+                <Text style={{ color: '#2563eb' }}>Free Wifi</Text>
               </View>
             </View>
+          </View>
+
+          {/* Action Buttons */}
+          <View style={{ padding: 15, gap: 10 }}>
+            <TouchableOpacity 
+              style={{ 
+                backgroundColor: '#2563eb',
+                padding: 15,
+                borderRadius: 10,
+                alignItems: 'center'
+              }}
+              onPress={() => router.push('/book-table')}
+            >
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500' }}>Book a Table</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={{ 
+                backgroundColor: '#fff',
+                padding: 15,
+                borderRadius: 10,
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: '#eee'
+              }}
+            >
+              <Text style={{ color: '#2563eb', fontSize: 16, fontWeight: '500' }}>Pay Bill</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

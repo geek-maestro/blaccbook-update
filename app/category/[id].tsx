@@ -52,18 +52,45 @@ export default function CategoryDetails() {
           headerShown: false
         }} 
       />
-      <ScrollView className="flex-1 bg-gray-50">
-        <View className="flex-row justify-between items-center pt-12 px-4 pb-2">
-          <View className="flex-row items-center">
+      <ScrollView style={{ flex: 1, backgroundColor: '#f9fafb' }}>
+        <View style={{ 
+          flexDirection: 'row', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          paddingTop: 48,
+          paddingHorizontal: 16,
+          paddingBottom: 8
+        }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity 
               onPress={() => router.back()} 
-              className="w-10 h-10 rounded-full bg-white justify-center items-center shadow-sm mr-4"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                backgroundColor: '#fff',
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2,
+                elevation: 2,
+                marginRight: 16
+              }}
             >
               <Ionicons name="chevron-back" size={24} color="#333" />
             </TouchableOpacity>
-            <Text className="text-2xl font-bold text-gray-800">{title}</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#1f2937' }}>{title}</Text>
           </View>
-          <TouchableOpacity className="w-10 h-10 rounded-full bg-orange-100 justify-center items-center">
+          <TouchableOpacity style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: '#fff7ed',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
             <Ionicons name="search" size={22} color="#F97316" />
           </TouchableOpacity>
         </View>
@@ -72,16 +99,24 @@ export default function CategoryDetails() {
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false}
-          className="px-2 py-4"
+          style={{ paddingHorizontal: 8, paddingVertical: 16 }}
         >
           {filterOptions.map((option) => (
             <TouchableOpacity
               key={option.id}
-              className={`px-4 py-2 rounded-full border mx-2 ${
-                option.id === 'all' ? 'bg-blue-500 border-blue-500' : 'bg-white border-gray-200'
-              }`}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                borderRadius: 20,
+                borderWidth: 1,
+                marginHorizontal: 8,
+                backgroundColor: option.id === 'all' ? '#3b82f6' : '#fff',
+                borderColor: option.id === 'all' ? '#3b82f6' : '#e5e7eb'
+              }}
             >
-              <Text className={`${option.id === 'all' ? 'text-white' : 'text-gray-700'}`}>
+              <Text style={{
+                color: option.id === 'all' ? '#fff' : '#374151'
+              }}>
                 {option.label}
               </Text>
             </TouchableOpacity>
@@ -92,31 +127,58 @@ export default function CategoryDetails() {
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false}
-          className="px-2 py-4"
+          style={{ paddingHorizontal: 8, paddingVertical: 16 }}
         >
           {cuisineTypes.map((cuisine) => (
-            <View key={cuisine.id} className="items-center mx-3">
-              <View className="w-16 h-16 rounded-full overflow-hidden mb-2">
-                <Image source={cuisine.image} className="w-full h-full" resizeMode="cover" />
+            <View key={cuisine.id} style={{ alignItems: 'center', marginHorizontal: 12 }}>
+              <View style={{ 
+                width: 64, 
+                height: 64, 
+                borderRadius: 32, 
+                overflow: 'hidden',
+                marginBottom: 8
+              }}>
+                <Image 
+                  source={cuisine.image} 
+                  style={{ width: '100%', height: '100%' }} 
+                  resizeMode="cover" 
+                />
               </View>
-              <Text className="text-sm text-gray-700">{cuisine.title}</Text>
+              <Text style={{ fontSize: 14, color: '#374151' }}>{cuisine.title}</Text>
             </View>
           ))}
         </ScrollView>
 
         {/* Popular Restaurants */}
-        <View className="px-4">
-          <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-xl font-bold text-gray-800">Popular Restaurants</Text>
+        <View style={{ paddingHorizontal: 16 }}>
+          <View style={{ 
+            flexDirection: 'row', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            marginBottom: 16
+          }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#1f2937' }}>
+              Popular Restaurants
+            </Text>
             <TouchableOpacity>
-              <Text className="text-gray-500">See all</Text>
+              <Text style={{ color: '#6b7280' }}>See all</Text>
             </TouchableOpacity>
           </View>
           
           {popularRestaurants.map((restaurant) => (
             <TouchableOpacity 
               key={restaurant.id}
-              className="bg-white rounded-2xl mb-4 overflow-hidden shadow-sm"
+              style={{
+                backgroundColor: '#fff',
+                borderRadius: 16,
+                marginBottom: 16,
+                overflow: 'hidden',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2,
+                elevation: 2
+              }}
               onPress={() => router.push({
                 pathname: '/restaurant/[id]',
                 params: { id: restaurant.id }
@@ -124,15 +186,27 @@ export default function CategoryDetails() {
             >
               <Image 
                 source={restaurant.image} 
-                className="w-full h-48"
+                style={{ width: '100%', height: 192 }}
                 resizeMode="cover"
               />
-              <View className="p-3">
-                <Text className="text-lg font-bold text-gray-800">{restaurant.name}</Text>
-                <Text className="text-sm text-gray-500">{restaurant.type}</Text>
+              <View style={{ padding: 12 }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#1f2937' }}>
+                  {restaurant.name}
+                </Text>
+                <Text style={{ fontSize: 14, color: '#6b7280' }}>{restaurant.type}</Text>
               </View>
               <TouchableOpacity 
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white justify-center items-center"
+                style={{
+                  position: 'absolute',
+                  top: 16,
+                  right: 16,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: '#fff',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
               >
                 <Ionicons 
                   name={restaurant.isBookmarked ? "bookmark" : "bookmark-outline"} 

@@ -1,139 +1,312 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { View, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { Text } from 'react-native-paper';
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 interface CategoryRating {
-  name: string;
-  rating: number;
-  labels: {
-    start: string;
-    end: string;
-  };
+  taste: number;
+  portion: number;
+  packaging: number;
 }
 
-export default function DetailedRating() {
+export default function RateService() {
   const [overallRating, setOverallRating] = useState(0);
-  const [review, setReview] = useState('');
-  const [categoryRatings, setCategoryRatings] = useState<CategoryRating[]>([
-    { name: 'Taste', rating: 0, labels: { start: 'Bad', end: 'Great' } },
-    { name: 'Portion', rating: 0, labels: { start: 'Not Much', end: 'Enough' } },
-    { name: 'Packaging', rating: 0, labels: { start: 'Bad', end: 'Great' } },
-  ]);
+  const [ratings, setRatings] = useState<CategoryRating>({
+    taste: 0,
+    portion: 0,
+    packaging: 0
+  });
+  const [comment, setComment] = useState('');
 
-  const handleCategoryRating = (index: number, rating: number) => {
-    const newRatings = [...categoryRatings];
-    newRatings[index] = { ...newRatings[index], rating };
-    setCategoryRatings(newRatings);
-  };
-
-  const renderStars = (rating: number, onRate: (r: number) => void) => {
+  const renderOverallStars = () => {
     return [...Array(5)].map((_, index) => (
       <TouchableOpacity
         key={index}
-        onPress={() => onRate(index + 1)}
-        className="mx-1"
+        onPress={() => setOverallRating(index + 1)}
+        style={styles.overallStarButton}
       >
         <Ionicons
-          name={index < rating ? "star" : "star-outline"}
-          size={24}
-          color={index < rating ? "#FFD700" : "#D1D5DB"}
+          name={index < overallRating ? "star" : "star-outline"}
+          size={32}
+          color="#FFD700"
+        />
+      </TouchableOpacity>
+    ));
+  };
+
+  const renderCategoryStars = (category: keyof CategoryRating) => {
+    return [...Array(5)].map((_, index) => (
+      <TouchableOpacity
+        key={index}
+        onPress={() => setRatings(prev => ({ ...prev, [category]: index + 1 }))}
+        style={styles.categoryStarButton}
+      >
+        <Ionicons
+          name={index < ratings[category] ? "star" : "star-outline"}
+          size={20}
+          color="#FFD700"
         />
       </TouchableOpacity>
     ));
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       <Stack.Screen 
         options={{ 
           headerShown: false
         }} 
       />
 
+      {/* Status Bar */}
+      <View style={styles.statusBar}>
+        <Text style={styles.statusBarTime}>9:41</Text>
+      </View>
+
       {/* Header */}
-      <View className="pt-12 px-4 flex-row justify-between items-center">
+      <View style={styles.header}>
         <TouchableOpacity 
           onPress={() => router.back()}
-          className="p-2"
+          style={styles.backButton}
         >
           <Ionicons name="close" size={24} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center">
-          <Ionicons name="help-circle-outline" size={20} color="#666" />
-          <Text className="text-gray-600 ml-1">Help and support</Text>
+        <TouchableOpacity style={styles.helpButton}>
+          <Ionicons name="information-circle-outline" size={20} color="#666" />
+          <Text style={styles.helpText}>Help and support</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="flex-1 px-4">
+      {/* Content */}
+      <View style={styles.content}>
         {/* Overall Rating */}
-        <View className="items-center mt-6 mb-8">
-          <View className="flex-row">
-            {renderStars(overallRating, setOverallRating)}
+        <View style={styles.overallRating}>
+          <View style={styles.overallStars}>
+            {renderOverallStars()}
           </View>
-          <Text className="text-xl font-medium mt-4">
-            How Great was it ?
-          </Text>
+          <Text style={styles.ratingTitle}>How Great was it ?</Text>
         </View>
 
-        {/* Category Ratings */}
-        <View className="space-y-4">
-          {categoryRatings.map((category, index) => (
-            <View
-              key={category.name}
-              className="bg-gray-50 p-4 rounded-xl"
-            >
-              <View className="flex-row justify-between items-center mb-2">
-                <Text className="text-gray-800">{category.name}</Text>
-                <View className="flex-row">
-                  {renderStars(
-                    category.rating,
-                    (r) => handleCategoryRating(index, r)
-                  )}
-                </View>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-gray-500 text-sm">{category.labels.start}</Text>
-                <Text className="text-gray-500 text-sm">{category.labels.end}</Text>
-              </View>
+        {/* Rating Categories */}
+        <View style={styles.ratingCategories}>
+          {/* Taste Rating */}
+          <View style={styles.categoryCard}>
+            <View style={styles.categoryLeft}>
+              <Text style={styles.categoryLabel}>Taste</Text>
+              <Text style={styles.ratingRange}>BAD</Text>
             </View>
-          ))}
+            <View style={styles.categoryRight}>
+              <View style={styles.categoryStars}>
+                {renderCategoryStars('taste')}
+              </View>
+              <Text style={styles.ratingRange}>GREAT</Text>
+            </View>
+          </View>
+
+          {/* Portion Rating */}
+          <View style={styles.categoryCard}>
+            <View style={styles.categoryLeft}>
+              <Text style={styles.categoryLabel}>Portion</Text>
+              <Text style={styles.ratingRange}>BAD</Text>
+            </View>
+            <View style={styles.categoryRight}>
+              <View style={styles.categoryStars}>
+                {renderCategoryStars('portion')}
+              </View>
+              <Text style={styles.ratingRange}>GREAT</Text>
+            </View>
+          </View>
+
+          {/* Packaging Rating */}
+          <View style={styles.categoryCard}>
+            <View style={styles.categoryLeft}>
+              <Text style={styles.categoryLabel}>Packaging</Text>
+              <Text style={styles.ratingRange}>BAD</Text>
+            </View>
+            <View style={styles.categoryRight}>
+              <View style={styles.categoryStars}>
+                {renderCategoryStars('packaging')}
+              </View>
+              <Text style={styles.ratingRange}>GREAT</Text>
+            </View>
+          </View>
         </View>
 
-        {/* Review Input */}
-        <View className="mt-6">
+        {/* Comment Box */}
+        <View style={styles.commentContainer}>
           <TextInput
-            className="bg-gray-50 p-4 rounded-xl h-32 text-gray-800"
+            style={styles.commentInput}
             placeholder="Let people know about your purchase"
             multiline
-            textAlignVertical="top"
-            value={review}
-            onChangeText={setReview}
+            numberOfLines={4}
+            value={comment}
+            onChangeText={setComment}
+            placeholderTextColor="#666"
           />
         </View>
 
-        {/* Footer */}
-        <View className="flex-row items-center mt-4 mb-2">
+        {/* Footer Note */}
+        <View style={styles.footer}>
           <Ionicons name="information-circle-outline" size={16} color="#666" />
-          <Text className="text-gray-500 ml-1">
+          <Text style={styles.footerText}>
             Review will appear publicly
           </Text>
         </View>
 
         {/* Submit Button */}
-        <Button
-          mode="contained"
-          onPress={() => {
-            // Handle submission
-            router.push('/rating-success');
-          }}
-          className="mt-4 mb-8 rounded-full"
-          buttonColor="#2563EB"
-        >
-          Submit
-        </Button>
-      </ScrollView>
+        <TouchableOpacity style={styles.submitButton}>
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  statusBar: {
+    height: 44,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusBarTime: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  backButton: {
+    padding: 4,
+  },
+  helpButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  helpText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 4,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  overallRating: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  overallStars: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  overallStarButton: {
+    padding: 4,
+  },
+  ratingTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+  },
+  ratingCategories: {
+    gap: 12,
+  },
+  categoryCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  categoryLeft: {
+    gap: 4,
+  },
+  categoryRight: {
+    alignItems: 'flex-end',
+    gap: 4,
+  },
+  categoryLabel: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: '500',
+  },
+  ratingRange: {
+    fontSize: 12,
+    color: '#666',
+  },
+  categoryStars: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  categoryStarButton: {
+    padding: 2,
+  },
+  commentContainer: {
+    marginTop: 24,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  commentInput: {
+    height: 120,
+    padding: 12,
+    textAlignVertical: 'top',
+    fontSize: 16,
+    color: '#000',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 6,
+  },
+  submitButton: {
+    backgroundColor: '#2563EB',
+    borderRadius: 24,
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 24,
+    marginHorizontal: 16,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+}); 

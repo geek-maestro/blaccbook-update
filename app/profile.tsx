@@ -20,7 +20,7 @@ export default function Profile() {
     { title: 'Preferences', showArrow: true },
   ];
 
-  const renderMenuItem = (item) => (
+  const renderMenuItem = (item:any) => (
     <TouchableOpacity 
       key={item.title}
       style={styles.menuItem}

@@ -1,114 +1,228 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { View, TouchableOpacity, ScrollView, TextInput, Image } from 'react-native';
 import { Text } from 'react-native-paper';
 import { Stack, router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 export default function ReservationDetails() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-  });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [instructions, setInstructions] = useState('');
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Stack.Screen 
         options={{ 
-          headerShown: false
+          headerShown: true,
+          headerTitle: "Your Reservation",
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => router.back()}
+              style={{ padding: 5 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="#000" />
+            </TouchableOpacity>
+          ),
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: '#fff'
+          },
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: '600'
+          }
         }} 
       />
-      
-      {/* Header with Back Button */}
-      <View className="pt-12 px-4 pb-4 border-b border-gray-200">
-        <View className="flex-row items-center">
-          <TouchableOpacity 
-            onPress={() => router.back()}
-            className="mr-4"
-          >
-            <Ionicons name="chevron-back" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text className="text-xl">Your Reservation</Text>
-        </View>
-      </View>
 
-      <ScrollView className="flex-1">
-        {/* Map View */}
-        <View className="h-48 bg-gray-100 mb-6">
-          {/* Map component will go here */}
+      <ScrollView style={{ flex: 1 }}>
+        {/* Map Preview */}
+        <View style={{ 
+          height: 180,
+          backgroundColor: '#e5e7eb',
+          marginBottom: 15
+        }}>
+          <Image 
+            source={require('../assets/images/map.jpg')}
+            style={{ width: '100%', height: '100%' }}
+            resizeMode="cover"
+          />
         </View>
 
         {/* Restaurant Info */}
-        <View className="px-4 mb-6">
-          <Text className="text-lg font-semibold mb-1">Limelight-Royal Orchid Hotel</Text>
-          <Text className="text-gray-600">Height-Ashbury-Balboa St</Text>
-          <View className="flex-row items-center mt-2">
-            <Ionicons name="people-outline" size={16} color="#666" />
-            <Text className="text-gray-600 ml-1">05 Guest</Text>
-            <Text className="text-gray-400 mx-2">•</Text>
-            <Ionicons name="calendar-outline" size={16} color="#666" />
-            <Text className="text-gray-600 ml-1">Tuesday 13 Apr</Text>
-            <Text className="text-gray-400 mx-2">•</Text>
-            <Ionicons name="time-outline" size={16} color="#666" />
-            <Text className="text-gray-600 ml-1">07:00PM</Text>
-          </View>
+        <View style={{ 
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          backgroundColor: '#fff',
+          borderBottomWidth: 1,
+          borderBottomColor: '#f3f4f6'
+        }}>
+          <Text style={{ 
+            fontSize: 18,
+            fontWeight: '600',
+            color: '#000',
+            marginBottom: 4
+          }}>
+            Limelight-Royal Orchid Hotel
+          </Text>
+          <Text style={{ 
+            fontSize: 14,
+            color: '#666'
+          }}>
+            Height-Ashbury-Balboa St
+          </Text>
         </View>
 
-        {/* Form */}
-        <View className="px-4">
-          <View className="mb-4">
-            <Text className="text-gray-600 mb-2">Name</Text>
+        {/* Reservation Details */}
+        <View style={{ 
+          flexDirection: 'row',
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          backgroundColor: '#fff',
+          borderBottomWidth: 1,
+          borderBottomColor: '#f3f4f6'
+        }}>
+          <Ionicons name="people-outline" size={20} color="#666" style={{ marginRight: 10 }} />
+          <Text style={{ fontSize: 15, color: '#666' }}>03 Guest</Text>
+        </View>
+
+        <View style={{ 
+          flexDirection: 'row',
+          paddingHorizontal: 20,
+          paddingVertical: 15,
+          backgroundColor: '#fff',
+          borderBottomWidth: 1,
+          borderBottomColor: '#f3f4f6'
+        }}>
+          <Ionicons name="calendar-outline" size={20} color="#666" style={{ marginRight: 10 }} />
+          <Text style={{ fontSize: 15, color: '#666' }}>Tuesday | 13 Apr | 07:00PM</Text>
+        </View>
+
+        {/* Form Fields */}
+        <View style={{ padding: 20 }}>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ 
+              fontSize: 15,
+              color: '#666',
+              marginBottom: 8
+            }}>Name</Text>
             <TextInput
-              value={formData.name}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
-              placeholder="Enter your name"
-              className="border border-gray-200 rounded-lg p-3 text-gray-700"
+              value={name}
+              onChangeText={setName}
+              placeholder="Davida Lizato"
+              style={{
+                height: 45,
+                borderWidth: 1,
+                borderColor: '#ddd',
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                fontSize: 15
+              }}
             />
           </View>
 
-          <View className="mb-4">
-            <Text className="text-gray-600 mb-2">Email</Text>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ 
+              fontSize: 15,
+              color: '#666',
+              marginBottom: 8
+            }}>Email</Text>
             <TextInput
-              value={formData.email}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
-              placeholder="Enter your email"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Davidalizato45@gmail.com"
               keyboardType="email-address"
-              className="border border-gray-200 rounded-lg p-3 text-gray-700"
+              style={{
+                height: 45,
+                borderWidth: 1,
+                borderColor: '#ddd',
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                fontSize: 15
+              }}
             />
           </View>
 
-          <View className="mb-4">
-            <Text className="text-gray-600 mb-2">Phone Number</Text>
-            <View className="flex-row border border-gray-200 rounded-lg overflow-hidden">
-              <View className="border-r border-gray-200 px-3 py-3 bg-gray-50">
-                <Text>🇺🇸 +1</Text>
-              </View>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ 
+              fontSize: 15,
+              color: '#666',
+              marginBottom: 8
+            }}>Phone Number</Text>
+            <View style={{
+              flexDirection: 'row',
+              height: 45,
+              borderWidth: 1,
+              borderColor: '#ddd',
+              borderRadius: 8,
+              alignItems: 'center'
+            }}>
+              <TouchableOpacity style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 12,
+                borderRightWidth: 1,
+                borderRightColor: '#ddd',
+                height: '100%'
+              }}>
+                <Text style={{ marginRight: 5, fontSize: 15 }}>+1</Text>
+                <MaterialIcons name="keyboard-arrow-down" size={20} color="#666" />
+              </TouchableOpacity>
               <TextInput
-                value={formData.phoneNumber}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, phoneNumber: text }))}
-                placeholder="Enter your phone number"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                placeholder="+234 XXXXXXXXXXX"
                 keyboardType="phone-pad"
-                className="flex-1 p-3 text-gray-700"
+                style={{
+                  flex: 1,
+                  paddingHorizontal: 12,
+                  fontSize: 15
+                }}
               />
             </View>
           </View>
 
-          <View className="mb-4">
-            <Text className="text-gray-600 mb-2">Add Instructions to restaurant</Text>
-            <TouchableOpacity className="border border-gray-200 rounded-lg p-3">
-              <Text className="text-gray-400">Optional</Text>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={{ 
+              fontSize: 15,
+              color: '#666',
+              marginBottom: 8
+            }}>Add instructions to resturant</Text>
+            <TouchableOpacity style={{
+              height: 45,
+              borderWidth: 1,
+              borderColor: '#ddd',
+              borderRadius: 8,
+              backgroundColor: '#f9fafb',
+              justifyContent: 'center',
+              paddingHorizontal: 12
+            }}>
+              <Text style={{ color: '#666', fontSize: 15 }}>Add instructions to resturant</Text>
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
 
-      {/* Bottom Button */}
-      <View className="px-4 py-4 border-t border-gray-200">
+      {/* Confirm Button */}
+      <View style={{ 
+        padding: 20,
+        borderTopWidth: 1,
+        borderTopColor: '#eee'
+      }}>
         <TouchableOpacity 
           onPress={() => router.push('/confirm-reservation')}
-          className="bg-blue-500 py-4 rounded-xl items-center justify-center"
+          style={{
+            backgroundColor: '#0066FF',
+            paddingVertical: 16,
+            borderRadius: 25,
+            alignItems: 'center'
+          }}
         >
-          <Text className="text-white text-[15px]">Confirm Booking</Text>
+          <Text style={{ 
+            color: '#fff',
+            fontSize: 16,
+            fontWeight: '500'
+          }}>Confirm Booking</Text>
         </TouchableOpacity>
       </View>
     </View>

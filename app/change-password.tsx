@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { Text, TextInput, Button } from 'react-native-paper';
+import { View, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { Text } from 'react-native-paper';
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -13,112 +13,196 @@ export default function ChangePassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.container}>
       <Stack.Screen 
         options={{ 
           headerShown: false
         }} 
       />
 
-      {/* Header */}
-      <View className="bg-white pt-12 px-4 pb-4">
-        <View className="flex-row items-center">
-          <TouchableOpacity 
-            onPress={() => router.back()}
-            className="mr-4"
-          >
-            <Ionicons name="arrow-back" size={24} color="#2563EB" />
-          </TouchableOpacity>
-          <Text className="text-xl font-medium">Change password</Text>
-        </View>
+      {/* Status Bar */}
+      <View style={styles.statusBar}>
+        <Text style={styles.statusBarTime}>9:41</Text>
       </View>
 
-      <View className="px-4 pt-6">
-        {/* Current Password */}
-        <View className="mb-4">
-          <Text className="text-gray-600 mb-2">Password</Text>
-          <View className="flex-row items-center bg-white rounded-lg border border-gray-200">
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity 
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
+          <View style={styles.backButtonCircle}>
+            <Ionicons name="chevron-back" size={24} color="#fff" />
+          </View>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Change password</Text>
+      </View>
+
+      {/* Content */}
+      <View style={styles.content}>
+        {/* Password Fields */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Password</Text>
+          <View style={styles.inputContainer}>
             <TextInput
+              style={styles.input}
               secureTextEntry={!showCurrentPassword}
               value={currentPassword}
               onChangeText={setCurrentPassword}
-              className="flex-1 h-12 px-4"
               placeholder="••••••••"
+              placeholderTextColor="#000"
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setShowCurrentPassword(!showCurrentPassword)}
-              className="pr-4"
+              style={styles.visibilityButton}
             >
-              <Ionicons 
-                name={showCurrentPassword ? "eye-off-outline" : "eye-outline"} 
-                size={20} 
-                color="#666" 
+              <Ionicons
+                name={showCurrentPassword ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color="#666"
               />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* New Password */}
-        <View className="mb-4">
-          <Text className="text-gray-600 mb-2">New Password</Text>
-          <View className="flex-row items-center bg-white rounded-lg border border-gray-200">
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>New Password</Text>
+          <View style={styles.inputContainer}>
             <TextInput
+              style={styles.input}
               secureTextEntry={!showNewPassword}
               value={newPassword}
               onChangeText={setNewPassword}
-              className="flex-1 h-12 px-4"
               placeholder="••••••••"
+              placeholderTextColor="#000"
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setShowNewPassword(!showNewPassword)}
-              className="pr-4"
+              style={styles.visibilityButton}
             >
-              <Ionicons 
-                name={showNewPassword ? "eye-off-outline" : "eye-outline"} 
-                size={20} 
-                color="#666" 
+              <Ionicons
+                name={showNewPassword ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color="#666"
               />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Confirm Password */}
-        <View className="mb-6">
-          <Text className="text-gray-600 mb-2">Confirm Password</Text>
-          <View className="flex-row items-center bg-white rounded-lg border border-gray-200">
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>Confirm Password</Text>
+          <View style={styles.inputContainer}>
             <TextInput
+              style={styles.input}
               secureTextEntry={!showConfirmPassword}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
-              className="flex-1 h-12 px-4"
               placeholder="••••••••"
+              placeholderTextColor="#000"
             />
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="pr-4"
+              style={styles.visibilityButton}
             >
-              <Ionicons 
-                name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} 
-                size={20} 
-                color="#666" 
+              <Ionicons
+                name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color="#666"
               />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Set Password Button */}
-        <Button
-          mode="contained"
-          onPress={() => {
-            // Handle password change
-            router.back();
-          }}
-          className="rounded-full"
-          buttonColor="#2563EB"
-        >
-          Set Password
-        </Button>
+        {/* Submit Button */}
+        <TouchableOpacity style={styles.submitButton}>
+          <Text style={styles.submitButtonText}>Set Password</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
-} 
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  statusBar: {
+    height: 44,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusBarTime: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  backButton: {
+    marginRight: 16,
+  },
+  backButtonCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#2563EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 8,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  input: {
+    flex: 1,
+    height: 48,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: '#000',
+  },
+  visibilityButton: {
+    padding: 12,
+  },
+  submitButton: {
+    backgroundColor: '#2563EB',
+    borderRadius: 24,
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 24,
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+}); 
