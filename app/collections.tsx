@@ -92,16 +92,18 @@ export default function Collections() {
         style={styles.headerBackground}
       >
         <View style={styles.headerContent}>
-          <TouchableOpacity 
-            onPress={() => router.back()}
-            style={styles.backButton}
-          >
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </TouchableOpacity>
+          <View style={styles.headerTopRow}>
+            <TouchableOpacity 
+              onPress={() => router.back()}
+              style={styles.backButton}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.createButton}>
+              <Text style={styles.createButtonText}>Create</Text>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.headerTitle}>Collections</Text>
-          <TouchableOpacity style={styles.createButton}>
-            <Text style={styles.createButtonText}>Create</Text>
-          </TouchableOpacity>
         </View>
       </ImageBackground>
 
@@ -154,19 +156,30 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   headerContent: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    padding: 16,
+ 
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    height: '100%'
+  },
+  headerTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: 'rgba(0,0,0,0.3)'
+    width: '100%',
+    marginBottom: 20,
+    marginTop: 30,
   },
   backButton: {
     padding: 8
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: '600',
-    color: '#FFFFFF'
+    color: '#FFFFFF',
+    textAlign: 'center'
   },
   createButton: {
     padding: 8
