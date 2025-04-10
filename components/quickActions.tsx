@@ -31,7 +31,7 @@ const QuickActions = ({ label, closing, notice, path }) => {
       <Text className='text-[#DC2934] text-md font-semibold'>{closing}</Text>
       <View className='flex-row items-center gap-3'>
       <AntDesign name="infocirlceo" size={18} color="#2174EE" />
-      <Text className='text-primary text-base'>{notice}</Text>
+      <Text className='text-text text-base'>{notice}</Text>
       </View>
 
       <View>
@@ -46,7 +46,7 @@ const QuickActions = ({ label, closing, notice, path }) => {
       </View>
 
       <View className='bg-[#F3F8FF] p-3 rounded-lg'>
-          <Text className='text-secondary'>For orders less than $12.00 for this treats shop,a small order fee applies</Text>
+          <Text className='text-text_secondary'>For orders less than $12.00 for this treats shop,a small order fee applies</Text>
       </View>
     </View>
   );

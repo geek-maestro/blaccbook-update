@@ -9,7 +9,7 @@ const DeliveryCard = ({ image, label, time, rating }: DeliveryProps ) => {
       <Image source={image} className="h-[130px] w-full object-cover" />
       <Text className="absolute left-0 top-0 bg-[#C0EACF66] p-2 text-[#ffffff] font-semibold text-base">Discount Price</Text>
       <View className='flex-row justify-between p-2 items-center'>
-      <Text className="text-md text-primary p-2">{label}</Text>
+      <Text className="text-md text-text p-2">{label}</Text>
         <Text>{time}</Text>
         </View>
         <View className="flex-row items-center justify-between p-2">
