@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
@@ -58,6 +58,7 @@ export default function Home() {
           My Profile
         </Button>
       </View>
+      <Redirect href={'/auth'} />
     </>
   );
 }

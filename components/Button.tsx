@@ -3,15 +3,16 @@ import { Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-nativ
 
 type ButtonProps = {
   title: string;
+  color?: string;
 } & TouchableOpacityProps;
 
-export const Button = forwardRef<View, ButtonProps>(({ title, ...touchableProps }, ref) => {
+export const Button = forwardRef<View, ButtonProps>(({ title, color, ...touchableProps }, ref) => {
   return (
     <TouchableOpacity
       ref={ref}
       {...touchableProps}
       className={`${styles.button} ${touchableProps.className}`}>
-      <Text className={styles.buttonText}>{title}</Text>
+      <Text className={styles.buttonText} style ={{ color: color || '#fff'}}>{title}</Text>
     </TouchableOpacity>
   );
 });
