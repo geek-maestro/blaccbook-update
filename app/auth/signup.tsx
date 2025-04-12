@@ -1,26 +1,30 @@
 import {
   View,
   SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Image,
 } from 'react-native';
 import React, { useState } from 'react';
 import { Text, TextInput } from 'react-native-paper';
-import { router } from 'expo-router';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Icons } from '~/components/Icons';
+import { router, Stack } from 'expo-router';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Icons } from '../../components/Icons';
 
-const Login = () => {
+const Signup = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [savePassword, setSavePassword] = useState(false);
+  const [getEmails, setGetEmails] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
+      <Stack.Screen 
+        options={{
+          headerShown: false
+        }}
+      />
       <ScrollView style={styles.scrollView}>
         {/* Back Button */}
         <TouchableOpacity 
@@ -30,26 +34,48 @@ const Login = () => {
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
 
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.welcomeText}>Welcome Back,</Text>
-          <Text style={styles.loginText}>
-            Login to your Blaccbook <Text style={styles.accountText}>account</Text>
-          </Text>
-        </View>
-
         {/* Form */}
         <View style={styles.form}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter Email or Mobile</Text>
+            <Text style={styles.label}>Enter First Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter your mobile number"
+              placeholder="Enter your first name"
+              value={firstName}
+              onChangeText={setFirstName}
+              mode="outlined"
+              outlineColor="#E5E7EB"
+              activeOutlineColor="#2174EE"
+              left={<TextInput.Icon icon="account" color="#6B7280" />}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter Last Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your last name"
+              value={lastName}
+              onChangeText={setLastName}
+              mode="outlined"
+              outlineColor="#E5E7EB"
+              activeOutlineColor="#2174EE"
+              left={<TextInput.Icon icon="account" color="#6B7280" />}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter Email</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your email"
               value={email}
               onChangeText={setEmail}
               mode="outlined"
               outlineColor="#E5E7EB"
               activeOutlineColor="#2174EE"
+              keyboardType="email-address"
+              left={<TextInput.Icon icon="email" color="#6B7280" />}
             />
           </View>
 
@@ -64,29 +90,27 @@ const Login = () => {
               mode="outlined"
               outlineColor="#E5E7EB"
               activeOutlineColor="#2174EE"
+              left={<TextInput.Icon icon="lock" color="#6B7280" />}
             />
           </View>
 
-          <View style={styles.passwordOptions}>
-            <View style={styles.savePasswordContainer}>
-              <TouchableOpacity
-                style={[styles.checkbox, savePassword && styles.checkboxChecked]}
-                onPress={() => setSavePassword(!savePassword)}
-              />
-              <Text style={styles.savePasswordText}>Save Password</Text>
-            </View>
-            <TouchableOpacity onPress={() => router.push('/auth/forgotPassword')}>
-              <Text style={styles.forgotPasswordText}>Forgot Password</Text>
-            </TouchableOpacity>
+          <View style={styles.checkboxContainer}>
+            <TouchableOpacity
+              style={[styles.checkbox, getEmails && styles.checkboxChecked]}
+              onPress={() => setGetEmails(!getEmails)}
+            />
+            <Text style={styles.checkboxText}>
+              Get emails about new businesses and promotional materials. Unsubscribe anytime.
+            </Text>
           </View>
         </View>
 
-        {/* Login Button */}
+        {/* Next Button */}
         <TouchableOpacity 
-          style={styles.loginButton}
+          style={styles.nextButton}
           onPress={() => router.push('/tabs')}
         >
-          <Text style={styles.loginButtonText}>Login</Text>
+          <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
 
         {/* Or Divider */}
@@ -94,28 +118,20 @@ const Login = () => {
           <Text style={styles.orText}>Or</Text>
         </View>
 
-        {/* Social Sign In */}
+        {/* Social Sign Up */}
         <View style={styles.socialContainer}>
-          <Text style={styles.signInWithText}>Sign In with</Text>
+          <Text style={styles.signUpWithText}>Sign Up with</Text>
           <View style={styles.socialIcons}>
             <TouchableOpacity style={styles.socialButton}>
-              <MaterialCommunityIcons name="facebook" size={24} color="#1877F2" />
+              <FontAwesome5 name="facebook" size={24} color="#1877F2" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
-              <Icons.Google.Colored size={26} />
+              <Icons.Google.Colored size={24} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
-              <MaterialCommunityIcons name="apple" size={24} color="black" />
+              <FontAwesome5 name="apple" size={24} color="black" />
             </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Sign Up Link */}
-        <View style={styles.signUpContainer}>
-          <Text style={styles.noAccountText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => router.push('/auth/signup')}>
-            <Text style={styles.signUpText}>Sign Up</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -133,23 +149,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginTop: 10,
-  },
-  header: {
-    marginTop: 20,
     marginBottom: 30,
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
-  },
-  loginText: {
-    fontSize: 16,
-    color: '#111827',
-  },
-  accountText: {
-    color: '#2174EE',
   },
   form: {
     gap: 20,
@@ -166,16 +166,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     height: 50,
   },
-  passwordOptions: {
+  checkboxContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  savePasswordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    alignItems: 'flex-start',
+    gap: 12,
+    marginTop: 10,
   },
   checkbox: {
     width: 20,
@@ -183,20 +178,19 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 2,
     borderColor: '#D1D5DB',
+    marginTop: 2,
   },
   checkboxChecked: {
     backgroundColor: '#2174EE',
     borderColor: '#2174EE',
   },
-  savePasswordText: {
+  checkboxText: {
+    flex: 1,
     fontSize: 14,
     color: '#6B7280',
+    lineHeight: 20,
   },
-  forgotPasswordText: {
-    fontSize: 14,
-    color: '#2174EE',
-  },
-  loginButton: {
+  nextButton: {
     backgroundColor: '#2174EE',
     height: 50,
     borderRadius: 25,
@@ -204,7 +198,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
   },
-  loginButtonText: {
+  nextButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
@@ -221,7 +215,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 20,
   },
-  signInWithText: {
+  signUpWithText: {
     fontSize: 14,
     color: '#111827',
   },
@@ -239,24 +233,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signUpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  noAccountText: {
-    fontSize: 14,
-    color: '#111827',
-  },
-  signUpText: {
-    fontSize: 14,
-    color: '#2174EE',
-  },
-  socialIcon: {
-    width: 24,
-    height: 24,
-  },
 });
 
-export default Login;
+export default Signup; 

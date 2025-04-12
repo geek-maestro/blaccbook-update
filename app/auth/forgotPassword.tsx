@@ -1,63 +1,146 @@
-import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import React from 'react';
-import { Container } from '~/components/Container';
-import { Text } from 'react-native-paper';
-import FormInput from '../components/FormInput';
-import { Button } from '~/components/Button';
-import { useForm } from 'react-hook-form';
-import { router } from 'expo-router';
+import {
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import React, { useState } from 'react';
+import { Text, TextInput } from 'react-native-paper';
+import { router, Stack } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const ForgotPassword = () => {
-    const {
-        control,
-        formState: { errors },
-      } = useForm({
-        defaultValues: {
-          email: '',
-          password: '',
-        },
-      });
+  const [email, setEmail] = useState('');
+
+  const handleSendCode = () => {
+    // TODO: Implement send code logic
+    router.push('/auth/verification');
+  };
+
   return (
-    <Container>
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView
-          className="flex-1"
-          contentContainerClassName="py-5"
-          showsVerticalScrollIndicator={false}>
-          <View className="mt-5 flex-1 px-1">
-          <Text variant="headlineMedium" style={{ fontWeight: 'bold' }}>
-            Forgot Password
-            </Text>
+    <SafeAreaView style={styles.container}>
+      <Stack.Screen 
+        options={{
+          headerShown: false
+        }}
+      />
+      <ScrollView style={styles.scrollView}>
+        {/* Back Button */}
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
 
-            <View className="mt-5">
-              <FormInput
-                label="Enter Email or Mobile"
-                placeholder="Enter your email"
-                control={control}
-                rules={{ required: true }}
-                name="email"
-              />
-              <View className="flex-row items-center gap-2">
-                <Text>
-                  A code will be sent to your phone.
-                  <Text style={{ color: '#2174EE', marginLeft: 5 }}>
-                    Please wait a while for the code to reach
-                  </Text>
-                </Text>
-              </View>
-            </View>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>Forgot Password?</Text>
+          <Text style={styles.subtitle}>
+            Enter your email address to receive a verification code
+          </Text>
+        </View>
 
-            <View className="mt-10 w-full items-center gap-5">
-              <Button className="bg-primary w-full rounded-xl" title="Next" onPress={() => router.push('/auth/verification')} />
-
-            </View>
+        {/* Form */}
+        <View style={styles.form}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email Address</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your email"
+              value={email}
+              onChangeText={setEmail}
+              mode="outlined"
+              outlineColor="#E5E7EB"
+              activeOutlineColor="#2174EE"
+              keyboardType="email-address"
+              left={<TextInput.Icon icon="email" color="#6B7280" />}
+            />
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </Container>
+        </View>
+
+        {/* Send Code Button */}
+        <TouchableOpacity 
+          style={styles.sendButton}
+          onPress={handleSendCode}
+        >
+          <Text style={styles.sendButtonText}>Receive Code</Text>
+        </TouchableOpacity>
+
+
+      </ScrollView>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  scrollView: {
+    flex: 1,
+    padding: 20,
+  },
+  backButton: {
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  header: {
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+    lineHeight: 24,
+  },
+  form: {
+    gap: 20,
+  },
+  inputContainer: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 14,
+    color: '#111827',
+    fontWeight: '500',
+  },
+  input: {
+    backgroundColor: '#FFFFFF',
+    height: 50,
+  },
+  sendButton: {
+    backgroundColor: '#2174EE',
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  sendButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  returnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 20,
+  },
+  returnText: {
+    color: '#2174EE',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
 
 export default ForgotPassword;

@@ -2,7 +2,7 @@ const menuItems = [
   {
     label: 'restaurants',
     icon: require('~/assets/icons/restaurant.png'),
-    path: '',
+    path: '/restuarant',
     params: '',
     size: 40,
   },
