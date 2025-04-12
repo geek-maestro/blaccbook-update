@@ -6,32 +6,71 @@ import {
   TextInput,
   Platform,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native-paper';
-import { router, Stack } from 'expo-router';
+import { router, Stack, Link } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView, { Marker, Callout } from 'react-native-maps';
 
+interface MarkerData {
+  id: number;
+  latitude: number;
+  longitude: number;
+  title: string;
+  type: string;
+  rating: number;
+}
+
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredMarkers, setFilteredMarkers] = useState([]);
-  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [filteredMarkers, setFilteredMarkers] = useState<MarkerData[]>([]);
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('relevance');
 
-  const dummyMarkers = [
-    { id: 1, latitude: 37.7749, longitude: -122.4194, title: 'Business 1', type: 'restaurant' },
-    { id: 2, latitude: 37.7739, longitude: -122.4312, title: 'Business 2', type: 'barber' },
-    { id: 3, latitude: 37.7729, longitude: -122.4232, title: 'Business 3', type: 'plumbing' },
+  const dummyMarkers: MarkerData[] = [
+    { id: 1, latitude: 37.7749, longitude: -122.4194, title: 'Business 1', type: 'restaurant', rating: 4.5 },
+    { id: 2, latitude: 37.7739, longitude: -122.4312, title: 'Business 2', type: 'barber', rating: 4.8 },
+    { id: 3, latitude: 37.7729, longitude: -122.4232, title: 'Business 3', type: 'plumbing', rating: 4.2 },
   ];
 
   useEffect(() => {
-    // Filter markers based on search query
-    const filtered = dummyMarkers.filter(marker =>
-      marker.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      marker.type.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Filter markers based on search query and active filter
+    let filtered = dummyMarkers;
+    
+    if (searchQuery) {
+      filtered = filtered.filter(marker =>
+        marker.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        marker.type.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(marker => marker.type === activeFilter);
+    }
+
+    // Sort markers based on selected sort option
+    if (sortBy === 'rating') {
+      filtered = [...filtered].sort((a, b) => b.rating - a.rating);
+    }
+    // Add more sorting options as needed
+
     setFilteredMarkers(filtered);
-  }, [searchQuery]);
+  }, [searchQuery, activeFilter, sortBy]);
+
+  const filterButtons = [
+    { id: 'all', label: 'All' },
+    { id: 'restaurant', label: 'Restaurants' },
+    { id: 'barber', label: 'Barbers' },
+    { id: 'plumbing', label: 'Plumbing' },
+  ];
+
+  const sortOptions = [
+    { id: 'relevance', label: 'Relevance' },
+    { id: 'rating', label: 'Rating' },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -95,25 +134,73 @@ const Search = () => {
       </View>
 
       {/* Filter Buttons */}
-      <View style={styles.filterContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterText}>Filters</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.filterContainer}
+        contentContainerStyle={styles.filterContent}
+      >
+        {filterButtons.map((button) => (
+          <TouchableOpacity
+            key={button.id}
+            style={[
+              styles.filterButton,
+              activeFilter === button.id && styles.filterButtonActive,
+            ]}
+            onPress={() => setActiveFilter(button.id)}
+          >
+            <Text style={[
+              styles.filterButtonText,
+              activeFilter === button.id && styles.filterButtonTextActive,
+            ]}>
+              {button.label}
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterText}>Sort</Text>
+        ))}
+      </ScrollView>
+
+      {/* Sort Options */}
+      <View style={styles.sortContainer}>
+        {sortOptions.map((option) => (
+          <TouchableOpacity
+            key={option.id}
+            style={[
+              styles.sortButton,
+              sortBy === option.id && styles.sortButtonActive,
+            ]}
+            onPress={() => setSortBy(option.id)}
+          >
+            <Text style={[
+              styles.sortButtonText,
+              sortBy === option.id && styles.sortButtonTextActive,
+            ]}>
+              {option.label}
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterText}>New Places</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text style={styles.filterText}>Open Now</Text>
-          </TouchableOpacity>
-        </ScrollView>
+        ))}
       </View>
 
       {/* Bottom Navigation */}
-
+      <View style={styles.bottomNav}>
+        <Link href="/" style={styles.navItem}>
+          <Text>Home</Text>
+        </Link>
+        <Link href="/search" asChild style={[styles.navItem, styles.navItemActive]}>
+          <Pressable>
+            <Text style={styles.navTextActive}>Search</Text>
+          </Pressable>
+        </Link>
+        <Link href="/history" asChild style={styles.navItem}>
+          <Pressable>
+            <Text>History</Text>
+          </Pressable>
+        </Link>
+        <Link href="/profile" asChild style={styles.navItem}>
+          <Pressable>
+            <Text>Profile</Text>
+          </Pressable>
+        </Link>
+      </View>
     </SafeAreaView>
   );
 };
@@ -182,25 +269,49 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
+  filterContent: {
+    alignItems: 'center',
+  },
   filterButton: {
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
+    backgroundColor: '#F3F4F6',
     marginRight: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
-  filterText: {
-    color: '#111827',
+  filterButtonActive: {
+    backgroundColor: '#2174EE',
+  },
+  filterButtonText: {
+    color: '#6B7280',
     fontSize: 14,
     fontWeight: '500',
+  },
+  filterButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  sortContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  sortButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+    marginRight: 8,
+  },
+  sortButtonActive: {
+    backgroundColor: '#2174EE',
+  },
+  sortButtonText: {
+    color: '#6B7280',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  sortButtonTextActive: {
+    color: '#FFFFFF',
   },
   bottomNav: {
     flexDirection: 'row',

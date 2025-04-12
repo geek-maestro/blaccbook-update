@@ -44,7 +44,7 @@ const menuItems = [
   {
     label: 'health',
     icon: require('~/assets/icons/health.png'),
-    path: '',
+    path: '/health/index',
     params: '',
     size: 40,
   },
@@ -182,7 +182,7 @@ const deliveries = [
     time: '1hour',
   },
   {
-    label: 'Lusin’s Bar',
+    label: 'Lusin\'s Bar',
     image: require('~/assets/images/delivery2.jpg'),
     rating: '4.3',
     time: '30mins',
@@ -194,7 +194,7 @@ const deliveries = [
     time: '1hour',
   },
   {
-    label: 'Lusin’s Bar',
+    label: 'Lusin\'s Bar',
     image: require('~/assets/images/delivery2.jpg'),
     rating: '4.3',
     time: '30mins',
@@ -206,7 +206,7 @@ const deliveries = [
     time: '1hour',
   },
   {
-    label: 'Lusin’s Bar',
+    label: 'Lusin\'s Bar',
     image: require('~/assets/images/delivery2.jpg'),
     rating: '4.3',
     time: '30mins',
