@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "547353025123",
+    "project_id": "blaccbook-dev",
+    "storage_bucket": "blaccbook-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547353025123:android:1423a296054836bbcf7656",
+        "android_client_info": {
+          "package_name": "com.iota.blaccbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547353025123-ecghevm4qj1265mmcfb87fiuta7jvqbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iota.blaccbook",
+            "certificate_hash": "ed9b018b0cc8aecb56502f3a15af553861b9b91d"
+          }
+        },
+        {
+          "client_id": "547353025123-jd5c6p6bmhtojn79v6nfgalbd7lm93b4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iota.blaccbook",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "547353025123-5ti5ae8vkbi2701j7bnrbpv5ec15tf3p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM375PXgyrcYQ4QAGoNuNMbXvVqKx2pPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "547353025123-5ti5ae8vkbi2701j7bnrbpv5ec15tf3p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "547353025123-161rr93qts2k2ofioa8bvc6g5dgu3qh8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.iota.blaccbook"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

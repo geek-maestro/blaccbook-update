@@ -14,12 +14,12 @@ const BusinessItem = () => {
         <Header />
 
         <View className="absolute top-[130px] w-full px-7">
-          <QuickActions label={label} closing={closing} notice={notice} />
+          <QuickActions label={label} closing={closing} notice={notice} path={""} />
         </View>
       </View>
 
-    <View className='mt-52'>
-      <ForYou />
+      <View className="mt-52">
+        <ForYou />
       </View>
     </View>
   );

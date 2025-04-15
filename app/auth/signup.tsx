@@ -1,15 +1,10 @@
-import {
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import { View, SafeAreaView, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Text, TextInput } from 'react-native-paper';
 import { router, Stack } from 'expo-router';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Icons } from '../../components/Icons';
+import { useAuth } from '../api/utils/context/authContext';
 
 const Signup = () => {
   const [firstName, setFirstName] = useState('');
@@ -18,19 +13,36 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [getEmails, setGetEmails] = useState(false);
 
+  const { register } = useAuth();
+
+  if (register.isError) {
+    Alert.alert('Error', 'Something went wrong. Please try again.');
+  }
+
+  const handleRegister = async () => {
+    if (!firstName || !lastName || !email || !password) {
+      Alert.alert('Error', 'Please fill in all the fields.');
+      return;
+    }
+    try {
+      await register.mutateAsync({ email, password, firstName, lastName });
+    } catch (err: any) {
+      console.log('Registration error:', err.message);
+      Alert.alert('Error', err.message );
+    }
+    
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <ScrollView style={styles.scrollView}>
         {/* Back Button */}
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
 
@@ -106,11 +118,10 @@ const Signup = () => {
         </View>
 
         {/* Next Button */}
-        <TouchableOpacity 
-          style={styles.nextButton}
-          onPress={() => router.push('/tabs')}
-        >
-          <Text style={styles.nextButtonText}>Next</Text>
+        <TouchableOpacity style={styles.nextButton} onPress={handleRegister}>
+          <Text style={styles.nextButtonText}>
+            {register.isPending ? <ActivityIndicator size="small" color="white" /> : 'Next'}
+          </Text>
         </TouchableOpacity>
 
         {/* Or Divider */}
@@ -235,4 +246,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup; 
+export default Signup;

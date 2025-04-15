@@ -1,10 +1,10 @@
 import { Stack, Redirect } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
+
 
 export default function Home() {
-  const router = useRouter();
 
   return (
     <>
@@ -17,7 +17,7 @@ export default function Home() {
       <View style={styles.container}>
         <Button 
           mode="contained" 
-          onPress={() => router.push('/gallery')}
+          onPress={() => router.push('/restuarant')}
           style={styles.button}
         >
           Browse Restaurants

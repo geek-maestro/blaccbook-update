@@ -16,6 +16,9 @@
         {
           "launchMode": "most-recent"
         }
+      ],
+      [
+        "@react-native-google-signin/google-signin"
       ]
     ],
     "experiments": {
@@ -23,25 +26,39 @@
       "tsconfigPaths": true
     },
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/icons/logo.png",
-      "resizeMode": "cover",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.iota.blaccbook",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBkF6iC02Evxl44FSabHXRs6gC-P6lD4QY"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ernesteshun.blaccbook"
+      "package": "com.iota.blaccbook",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBkF6iC02Evxl44FSabHXRs6gC-P6lD4QY"
+        }
+      }
     },
     "extra": {
       "router": {

@@ -7,17 +7,37 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  Alert,
 } from 'react-native';
 import React, { useState } from 'react';
 import { Text, TextInput } from 'react-native-paper';
 import { router } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icons } from '~/components/Icons';
+import { useAuth } from '../api/utils/context/authContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [savePassword, setSavePassword] = useState(false);
+  const { login, googleLogin } = useAuth()
+
+  const handleLogin = async () => {
+    try {
+      await login.mutateAsync({email, password});
+    } catch (err) {
+      console.log("login error", err.message)
+      Alert.alert('Login Error', login.error?.message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin.mutateAsync();
+    } catch (err: any) {
+      Alert.alert('Google Sign-In Error', googleLogin.error?.message);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,9 +104,9 @@ const Login = () => {
         {/* Login Button */}
         <TouchableOpacity 
           style={styles.loginButton}
-          onPress={() => router.push('/tabs')}
+          onPress={handleLogin}
         >
-          <Text style={styles.loginButtonText}>Login</Text>
+          <Text style={styles.loginButtonText}>{login.isPending ? 'Logging in...' : 'Login'}</Text>
         </TouchableOpacity>
 
         {/* Or Divider */}
@@ -101,7 +121,7 @@ const Login = () => {
             <TouchableOpacity style={styles.socialButton}>
               <MaterialCommunityIcons name="facebook" size={24} color="#1877F2" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
+            <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
               <Icons.Google.Colored size={26} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>

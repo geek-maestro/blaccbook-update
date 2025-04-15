@@ -2,7 +2,7 @@ import { View, Text, FlatList, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { Container } from '~/components/Container';
 import Header from '~/components/header';
-import { TextInput } from 'react-native-paper';
+import { Searchbar, TextInput } from 'react-native-paper';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MenuItem from '~/components/menuItem';
 import { dishes, menuItems } from '../api/dummyData';
@@ -11,21 +11,30 @@ import OrderSection from '~/components/OrderSection';
 import DeliverySection from '~/components/DeliverySection';
 import SortingScreen from '~/components/sortingScreen';
 import SearchResults from '~/components/searchResults';
+import { getServices } from '../api/utils/services/business.service';
 
 const Home = () => {
   const [searchText, setSearchText] = useState('');
   const [ apply, setApply ] = useState(false)
+  const { data: services, isLoading, isError } = getServices();
+  const dish = services?.filter((item) => item.serviceType === 'Restaurants').slice(0, 5);
   return (
     <View className="flex-1">
       <View className="relative z-10">
         <Header />
-        <TextInput
+        <Searchbar 
+           placeholder="Search"
+           onChangeText={(text) => setSearchText(text)}
+           value={searchText}
+           style={{ position: 'absolute', bottom: -25, left: 20, right: 20 }}
+        />
+        {/* <TextInput
           placeholder="Search"
           mode="flat"
           onChangeText={(text) => setSearchText(text)}
           left={<FontAwesome name="search" size={24} color="#CACDCF" />}
           style={{ position: 'absolute', bottom: -25, left: 20, right: 20 }}
-        />
+        /> */}
       </View>
 
       <ScrollView
@@ -35,7 +44,7 @@ const Home = () => {
         {searchText.length > 0 ? (
           <SortingScreen setApply = {setApply} />
         ) : apply === true ? (
-          <SearchResults />
+          <SearchResults search = {searchText} />
         ) : (
           <>
             <View className="mt-20 w-full ">
@@ -71,17 +80,18 @@ const Home = () => {
             </View>
 
             <View className="mt-10 w-full ">
+              { isLoading && <Text>Loading...</Text>}
               <FlatList
-                data={dishes}
+                data={dish}
                 keyExtractor={(item, index) => index.toString()}
                 horizontal
                 renderItem={({ item }) => (
                   <MenuItem
                     icon={item.icon}
-                    label={item.label}
+                    label={item.title}
                     path={item.path}
                     params={item.params}
-                    size={item.size}
+                    size={80}
                     textSize={14}
                   />
                 )}

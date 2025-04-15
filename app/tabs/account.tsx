@@ -3,10 +3,16 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../api/utils/context/authContext';
+import { client } from '../_layout';
+
 
 export default function Profile() {
+  const { logout } = useAuth();
+  const user = client.getQueryData(['user']);
+  console.log(user, "user");
   const mainMenuItems = [
-    { title: 'Account', rightText: 'angela@gmail.com' },
+    { title: 'Account', rightText: user?.email },
     { title: 'Change Password', showArrow: true },
     { title: 'Payment', showArrow: true },
     { title: 'Notifications', showArrow: true },
@@ -18,6 +24,7 @@ export default function Profile() {
     { title: 'Reviews', count: '1' },
     { title: 'FAQ', showArrow: true },
     { title: 'Preferences', showArrow: true },
+    { title: 'Logout', showArrow: true },
   ];
 
   const renderMenuItem = (item:any) => (
@@ -44,12 +51,15 @@ export default function Profile() {
           case 'Collections':
             router.push('/collections');
             break;
+          case 'Logout':
+            logout;
+            break
         }
       }}
     >
       <Text style={[
         styles.menuText,
-        item.rightText === 'angela@gmail.com' && styles.emailText
+        user?.email && styles.emailText
       ]}>
         {item.title}
       </Text>
@@ -57,7 +67,7 @@ export default function Profile() {
         {item.rightText && (
           <Text style={[
             styles.rightText,
-            item.rightText === 'angela@gmail.com' && styles.emailText
+            user?.email && styles.emailText
           ]}>
             {item.rightText}
           </Text>
@@ -85,11 +95,11 @@ export default function Profile() {
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>A</Text>
+              <Text style={styles.avatarText}>{user?.name.slice(0, 1)}</Text>
             </View>
           </View>
           <View style={styles.profileInfo}>
-            <Text style={styles.name}>John Mobbin</Text>
+            <Text style={styles.name} className='capitalize'>{user?.name}</Text>
             <View style={styles.ratingContainer}>
               <Ionicons name="star" size={16} color="#FFD700" />
               <Text style={styles.rating}>4.5</Text>

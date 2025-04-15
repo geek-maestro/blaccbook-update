@@ -44,7 +44,7 @@ export const RestaurantCarousel: React.FC<CarouselProps> = ({
           >
             <Image 
               source={item.image} 
-              className="w-full h-48"
+              className="w-full h-[250px]"
               resizeMode="cover"
             />
           </View>

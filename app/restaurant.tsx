@@ -8,8 +8,10 @@ import { SearchBar } from './components/SearchBar';
 import { CategoryItem } from './components/CategoryItem';
 import { PlaceCard } from './components/PlaceCard';
 import { RestaurantCarousel } from './components/RestaurantCarousel';
+import { getMerchants } from './api/utils/services/business.service';
 
 export default function Gallery() {
+  const { data:merchants, isLoading, isError } = getMerchants()
   const categories = [
     { id: 1, title: 'Pure Veg', image: require('../assets/images/restaurant.png') },
     { id: 2, title: 'Rooftop', image: require('../assets/images/fine-dining.png') },
@@ -34,18 +36,20 @@ export default function Gallery() {
     },
   ];
 
-  const places = [
-    {
-      title: '10 New Popular Cafes',
-      subtitle: 'Trending this week',
-      image: require('../assets/images/dish1.jpeg'),
-    },
-    {
-      title: '8 Finest Microbreweries',
-      subtitle: 'Best craft beers',
-      image: require('../assets/images/dish2.jpeg'),
-    },
-  ];
+  const places = merchants
+
+  // const places = [
+  //   {
+  //     title: '10 New Popular Cafes',
+  //     subtitle: 'Trending this week',
+  //     image: require('../assets/images/dish1.jpeg'),
+  //   },
+  //   {
+  //     title: '8 Finest Microbreweries',
+  //     subtitle: 'Best craft beers',
+  //     image: require('../assets/images/dish2.jpeg'),
+  //   },
+  // ];
 
   return (
     <>
@@ -89,11 +93,11 @@ export default function Gallery() {
         <View className="p-4">
           <Text className="text-xl font-bold text-gray-800 mb-4">Must Try Places</Text>
           <View className="flex-row flex-wrap justify-between">
-            {places.map((place, index) => (
+            {places?.map((place, index) => (
               <PlaceCard
                 key={index}
-                title={place.title}
-                subtitle={place.subtitle}
+                title={place.name}
+                subtitle={place.serviceTypes[0]}
                 image={place.image}
               />
             ))}
