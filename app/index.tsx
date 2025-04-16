@@ -2,9 +2,27 @@ import { Stack, Redirect } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { router } from 'expo-router';
-
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      const status = await AsyncStorage.getItem('@BlaccBook:hasSeenOnboarding');
+      setHasSeenOnboarding(status === 'true');
+    };
+    checkOnboardingStatus();
+  }, []);
+
+  if (hasSeenOnboarding === null) {
+    return null; // or a loading screen
+  }
+
+  if (!hasSeenOnboarding) {
+    return <Redirect href="/onboarding" />;
+  }
 
   return (
     <>
@@ -17,7 +35,7 @@ export default function Home() {
       <View style={styles.container}>
         <Button 
           mode="contained" 
-          onPress={() => router.push('/restuarant')}
+          onPress={() => router.push('/restaurant')}
           style={styles.button}
         >
           Browse Restaurants
