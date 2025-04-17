@@ -17,13 +17,9 @@ interface DeliveryProps {
 interface SearchProps {
     image: ImageSourcePropType;
     name: string;
-    distance: string | number;
-    time: string | number;
     rating: string | number;
-    discount: string | number;
     price: string | number;
-    vendor: string | number;
-    topService: boolean
+    topService: boolean;
 }
 
 export type { OrderProps, DeliveryProps, SearchProps }

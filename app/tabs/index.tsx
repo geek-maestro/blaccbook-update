@@ -12,21 +12,22 @@ import DeliverySection from '~/components/DeliverySection';
 import SortingScreen from '~/components/sortingScreen';
 import SearchResults from '~/components/searchResults';
 import { getServices } from '../api/utils/services/business.service';
+import LoadingState from '~/components/LoadingState';
 
 const Home = () => {
   const [searchText, setSearchText] = useState('');
-  const [ apply, setApply ] = useState(false)
+  const [apply, setApply] = useState(false);
   const { data: services, isLoading, isError } = getServices();
   const dish = services?.filter((item) => item.serviceType === 'Restaurants').slice(0, 5);
   return (
     <View className="flex-1">
       <View className="relative z-10">
         <Header />
-        <Searchbar 
-           placeholder="Search"
-           onChangeText={(text) => setSearchText(text)}
-           value={searchText}
-           style={{ position: 'absolute', bottom: -25, left: 20, right: 20 }}
+        <Searchbar
+          placeholder="Search"
+          onChangeText={(text) => setSearchText(text)}
+          value={searchText}
+          style={{ position: 'absolute', bottom: -25, left: 20, right: 20 }}
         />
         {/* <TextInput
           placeholder="Search"
@@ -42,9 +43,10 @@ const Home = () => {
         contentContainerClassName="pb-20"
         showsVerticalScrollIndicator={false}>
         {searchText.length > 0 ? (
-          <SortingScreen setApply = {setApply} />
-        ) : apply === true ? (
-          <SearchResults search = {searchText} />
+          // (
+          //   <SortingScreen setApply = {setApply} />
+          // ) : apply === true ? (
+          <SearchResults search={searchText} />
         ) : (
           <>
             <View className="mt-20 w-full ">
@@ -56,8 +58,8 @@ const Home = () => {
                   <MenuItem
                     icon={item.icon}
                     label={item.label}
-                    path={item.path}
-                    params={item.params}
+                    path={'/screens/mart'}
+                    params={{id: 'Restaurants'}}
                     size={item.size}
                     textSize={12}
                   />
@@ -80,7 +82,7 @@ const Home = () => {
             </View>
 
             <View className="mt-10 w-full ">
-              { isLoading && <Text>Loading...</Text>}
+              {isLoading && <LoadingState />}
               <FlatList
                 data={dish}
                 keyExtractor={(item, index) => index.toString()}
@@ -89,7 +91,7 @@ const Home = () => {
                   <MenuItem
                     icon={item.icon}
                     label={item.title}
-                    path={item.path}
+                    path={'/screens/mart'}
                     params={item.params}
                     size={80}
                     textSize={14}

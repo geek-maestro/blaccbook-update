@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 12,
     overflow: 'hidden',
+    width: "100%"
   },
 });
 

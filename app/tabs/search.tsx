@@ -7,40 +7,80 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text } from 'react-native-paper';
 import { router, Stack } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import MapView, { Marker, Callout } from 'react-native-maps';
+import { getServices } from '../api/utils/services/business.service';
+import * as Location from 'expo-location';
+import LoadingState from '~/components/LoadingState';
+import MapItems from '~/components/MapItems';
+import { useLocation } from '../api/utils/context/locationContext';
+import { ServiceItemProps } from '~/types/serviceItem';
 
 const Search = () => {
+  const { data: services, isLoading, isError } = getServices();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredMarkers, setFilteredMarkers] = useState([]);
+  const [filteredMarkers, setFilteredMarkers] = useState<ServiceItemProps[]>([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const dummyMarkers = [
-    { id: 1, latitude: 37.7749, longitude: -122.4194, title: 'Business 1', type: 'restaurant' },
-    { id: 2, latitude: 37.7739, longitude: -122.4312, title: 'Business 2', type: 'barber' },
-    { id: 3, latitude: 37.7729, longitude: -122.4232, title: 'Business 3', type: 'plumbing' },
-  ];
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setError('Permission to access location was denied');
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    };
+    getLocation();
+  }, []);
+
+  console.log(location, 'location');
+
+  // const dummyMarkers = [
+  //   { id: 1, latitude: 37.7749, longitude: -122.4194, title: 'Business 1', type: 'restaurant' },
+  //   { id: 2, latitude: 37.7739, longitude: -122.4312, title: 'Business 2', type: 'barber' },
+  //   { id: 3, latitude: 37.7729, longitude: -122.4232, title: 'Business 3', type: 'plumbing' },
+  // ];
 
   useEffect(() => {
     // Filter markers based on search query
-    const filtered = dummyMarkers.filter(marker =>
-      marker.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      marker.type.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = services?.filter(
+      (marker): marker is ServiceItemProps =>
+        marker.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        marker.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setFilteredMarkers(filtered);
+    setFilteredMarkers(filtered || []);
   }, [searchQuery]);
+
+  const mapRef = useRef<MapView | null>(null);
+  const { selectedItem, setSelectedItem } = useLocation();
+
+  // animate map when a card is selected
+  useEffect(() => {
+    if (selectedItem && mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: selectedItem.location.lat,
+        longitude: selectedItem.location.lng,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    }
+  }, [selectedItem]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
-      
+
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
@@ -61,41 +101,45 @@ const Search = () => {
       </View>
 
       {/* Map View */}
-      <View style={styles.mapContainer}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 37.7749,
-            longitude: -122.4194,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          {(searchQuery === '' ? dummyMarkers : filteredMarkers).map((marker) => (
-            <Marker
-              key={marker.id}
-              coordinate={{
-                latitude: marker.latitude,
-                longitude: marker.longitude,
-              }}
-              onPress={() => setSelectedMarker(marker)}
-            >
-              <View style={styles.markerContainer}>
-                <MaterialCommunityIcons name="store" size={24} color="#2174EE" />
-              </View>
-              <Callout>
-                <View style={styles.calloutContainer}>
-                  <Text style={styles.calloutTitle}>{marker.title}</Text>
-                  <Text style={styles.calloutType}>{marker.type}</Text>
+      {!location ? (
+        <LoadingState />
+      ) : (
+        <View style={styles.mapContainer}>
+          <MapView
+            ref={mapRef}
+            style={styles.map}
+            initialRegion={{
+              latitude: location?.coords?.latitude,
+              longitude: location?.coords?.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            showsUserLocation
+            showsMyLocationButton={true}>
+            {(searchQuery === '' ? services || [] : filteredMarkers || []).map((marker) => (
+              <Marker
+                key={marker.serviceId}
+                coordinate={{ latitude: marker.location.lat, longitude: marker.location.lng }}
+                onPress={() => setSelectedItem(marker)}>
+                <View style={styles.markerContainer}>
+                  <MaterialCommunityIcons name="store" size={30} color="#2174EE" />
                 </View>
-              </Callout>
-            </Marker>
-          ))}
-        </MapView>
-      </View>
+                <Callout>
+                  <View style={styles.calloutContainer}>
+                    <Text style={styles.calloutTitle}>{marker.title}</Text>
+                    <Text style={styles.calloutType}>{marker.serviceType}</Text>
+                  </View>
+                </Callout>
+              </Marker>
+            ))}
+          </MapView>
+        </View>
+      )}
 
-      {/* Filter Buttons */}
       <View style={styles.filterContainer}>
+        <MapItems services={services} search={searchQuery} filtered={filteredMarkers} />
+
+        {/* Filter Buttons */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity style={styles.filterButton}>
             <Text style={styles.filterText}>Filters</Text>
@@ -113,7 +157,6 @@ const Search = () => {
       </View>
 
       {/* Bottom Navigation */}
-
     </SafeAreaView>
   );
 };
@@ -176,11 +219,12 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     position: 'absolute',
-    bottom: 90,
+    bottom: 20,
     left: 0,
     right: 0,
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     paddingVertical: 10,
+    // gap:20
   },
   filterButton: {
     backgroundColor: '#FFFFFF',
@@ -229,15 +273,18 @@ const styles = StyleSheet.create({
   },
   calloutContainer: {
     padding: 10,
+    width: 300,
   },
   calloutTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    width: '100%',
   },
   calloutType: {
     fontSize: 14,
     color: '#6B7280',
+    width: '100%',
   },
 });
 
-export default Search; 
+export default Search;

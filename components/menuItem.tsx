@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { router } from 'expo-router';
+import { Href, router } from 'expo-router';
 
 interface MenuItemsProps {
-  path: string;
-  params?: any;
+  path: Href
+  params?: Record<string, string | number | boolean>;
   icon: any;
   label: string;
   size?: number;
@@ -13,17 +13,18 @@ interface MenuItemsProps {
 
 const MenuItem = ({ path, params, icon, label, size = 40, textSize = 16 }: MenuItemsProps) => {
   const handlePress = () => {
-    if (path.startsWith('/')) {
-      router.push(path);
-    } else {
-      router.push(`/${path}`);
-    }
+    const stringParams = Object.fromEntries(
+      Object.entries(params || {}).map(([key, value]) => [key, String(value)])
+    );
+    router.push({ pathname: path, params: stringParams });
   };
 
   return (
-    <TouchableOpacity className='items-center gap-3' onPress={handlePress}>
+    <TouchableOpacity className="items-center gap-3" onPress={handlePress}>
       <Image source={icon} style={{ height: size, width: size, borderRadius: size / 2 }} />
-      <Text className='capitalize text-xs' style ={{ fontSize: textSize}}>{label}</Text>
+      <Text className="text-xs capitalize" style={{ fontSize: textSize }}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 };

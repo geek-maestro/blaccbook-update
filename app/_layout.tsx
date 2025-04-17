@@ -7,6 +7,7 @@ import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
+import { LocationContext, LocationProvider } from './api/utils/context/locationContext';
 
 export const client = new QueryClient();
 
@@ -31,18 +32,19 @@ export default function Layout() {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId:'547353025123-5ti5ae8vkbi2701j7bnrbpv5ec15tf3p.apps.googleusercontent.com'
+      webClientId: '547353025123-5ti5ae8vkbi2701j7bnrbpv5ec15tf3p.apps.googleusercontent.com',
     });
   }, []);
 
-
   return (
     <QueryClientProvider client={client}>
-    <AuthProvider>
-      <PaperProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-      </PaperProvider>
-    </AuthProvider>
+      <AuthProvider>
+        <LocationProvider>
+          <PaperProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+          </PaperProvider>
+        </LocationProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

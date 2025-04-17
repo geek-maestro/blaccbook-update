@@ -7,7 +7,11 @@ import { getMerchants, getServices } from '~/app/api/utils/services/business.ser
 const SearchResults = ({ search }: { search: string }) => {
   const { data: services, isLoading, isError } = getServices();
   const { data: merchants, isLoading: loading, isError: error } = getMerchants();
-  const results = services?.filter((item) => item.serviceType.toLowerCase().includes(search));
+  const results = services?.filter((item) =>
+    search
+      ? item.title.toLowerCase().includes(search.toLowerCase())
+      : true
+  );
   return (
     <View className="mt-10 flex-1">
       <FlatList
@@ -17,12 +21,8 @@ const SearchResults = ({ search }: { search: string }) => {
           <SearchCard
             image={item?.icon}
             name={item?.title}
-            distance={item?.distance}
-            time={item?.time}
             rating={item?.reviews?.average}
-            discount={item?.discount}
             price={item.price}
-            vendor={item?.vendor}
             topService={item?.reviews?.count > 20}
           />
         )}

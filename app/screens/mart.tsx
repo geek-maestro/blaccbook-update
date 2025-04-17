@@ -3,13 +3,15 @@ import { ScrollView, View, TouchableOpacity, Image, Text } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import { CategoryItem } from '../components/CategoryItem';
 import { RestaurantCarousel } from '../components/RestaurantCarousel';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import AdCard from '~/components/adCard';
 import OrderSection from '~/components/OrderSection';
 import SearchCard from '~/components/searchCard';
 import { getMerchants, getServices } from '../api/utils/services/business.service';
 
 const Mart = () => {
+  const params = useLocalSearchParams(); // Correctly access the params
+  console.log(params.id, 'params'); // Debug to ensure params are received
   const { data: services, isLoading, isError } = getServices();
   const { data: merchants, isLoading: loading, isError: error } = getMerchants();
   const healthData = services?.filter((item) => item.serviceType.toLowerCase().includes('health'));

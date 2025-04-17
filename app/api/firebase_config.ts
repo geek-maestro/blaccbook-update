@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import {
   addDoc,
@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import * as FileSystem from 'expo-file-system';
 import mime from 'mime';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyDxKKFGnFi-IBYHJ2jey2-m9akojlCv6ZE',
@@ -28,7 +29,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const db = getFirestore(app);
-const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+
 
 export const getDocument = async (collectionName: string, id: string) => {
   const docRef = doc(db, collectionName, id);
